@@ -1,0 +1,58 @@
+Pyhon code for test system, extracted from running system. 
+
+Here's the header commenting the code.py script
+
+'''
+   The simplest test of WDT, just reset it and pulse the trigger.
+
+   It runs an a special test rig PCB I designed which uses a
+   Raspberry Pi Pico to manage testing. There are two tests; insure
+   the timeout is at least what we deem usable, and then make sure
+   the unit can be successfully retriggered.
+
+   The first test resets the 7555, waits and then triggers the one-shot.
+   It then monitors how long it takes to time out, it will trigger it
+   one or more times and collect the minimum and maximum timeout periods.
+   The minimum time is used to control the behavior of the second test,
+   to optimize the amount of time the test takes.
+
+   The second test sets the trigger interval at 60% of the unit's minimum
+   timeout before retriggering it; looking for unexpected timeouts which
+   cause a test failure. We want to insure retriggering extends the WDT
+   timeout indefinitely. It runs with the same trigger interval several times,
+   because we have seen it extend, only to timeout before the second trigger.
+   We consider this a failure.
+
+   The second test then increments the trigger interval by a certain amount
+   and tries this all again. We keep bumping up the trigger interval until
+   we have successfully reached our desired minimum of 300 seconds.
+
+   Note that we have designed it to run tests on units with shorter timeouts,
+   this being done to expedite the development of the test. Seriously, the
+   normal test cycle takes about two and a half hours. The short version takes
+   about a tenth of that.
+
+   Pinout of the WDT:
+
+      Pin 1 GND
+      Pin 2 Reset        -_-----------------------------------------------
+      Pin 3 Trigger      ----_---------_---------_---------_---------_----
+      Pin 4 Control Voltage pin of 7555
+      Pin 5 Reset pulse  -----------_---------_---------_---------_-------
+      Pin 6 7555 output  X___-------___-------___-------___-------___-----
+      Pin 7 Capacitor+ of RC network (only load with high-impedance probe)
+      Pin 8 VCC
+
+   >>> import board (Raspberry Pi Pico)
+   >>> dir(board)
+   ['__class__', 'A0', 'A1', 'A2', 'A3', 'GP0', 'GP1', 'GP10', 'GP11',
+   'GP12', 'GP13', 'GP14', 'GP15', 'GP16', 'GP17', 'GP18', 'GP19',
+   'GP2', 'GP20', 'GP21', 'GP22', 'GP23', 'GP24', 'GP25', 'GP26',
+   'GP26_A0', 'GP27', 'GP27_A1', 'GP28', 'GP28_A2', 'GP3', 'GP4', 'GP5',
+   'GP6', 'GP7', 'GP8', 'GP9', 'LED', 'SMPS_MODE', 'VBUS_SENSE',
+   'VOLTAGE_MONITOR']
+   >>>
+
+   Modified to tests several units concurrently, because the test
+   runs for a long time and we have a lot to test.
+'''
