@@ -53,6 +53,6 @@ Here's the header commenting the code.py script
    'VOLTAGE_MONITOR']
    >>>
 
-   Modified to tests several units concurrently, because the test
+   Modified to test several units concurrently, because the test
    runs for a long time and we have a lot to test.
 '''
